@@ -118,14 +118,8 @@ const MachineConfigurator = () => {
     { title: 'ATEX & Normeringen', id: 'atex-norms' }
   ];
 
-  // Auto-logic: Bepaal of palletiseren stap getoond moet worden
-  useEffect(() => {
-    const shouldShowPalletizing = config.outputRate > 200 || config.packageWeight > 25;
-    setConfig(prev => ({
-      ...prev,
-      showPalletizing: shouldShowPalletizing
-    }));
-  }, [config.outputRate, config.packageWeight]);
+  // Palletiseren: keuze wordt handmatig door de gebruiker bepaald
+
 
   // Auto-logic: Big Bag handling
   useEffect(() => {

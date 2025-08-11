@@ -445,111 +445,137 @@ const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
         );
 
       case 8: // Stap 9: Palletiseren
-        if (!config.showPalletizing || ['pot', 'emmer'].includes(config.packagingType)) {
-          return (
-            <div className="text-center py-12">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Palletiseren niet nodig</h3>
-              <p className="text-gray-600">
-                Bij dit gewicht ({config.packageWeight} kg), output ({config.outputRate} zakken/uur) 
-                en verpakkingstype is palletiseren niet standaard nodig.
-              </p>
-            </div>
-          );
-        }
-        
         return (
           <div className="space-y-8">
             <div>
               <Label className="text-xl font-bold mb-6 block text-gray-900">
-                Palletisering configuratie
+                Palletiseren
               </Label>
-              
-              <div className="space-y-6">
-                <div>
-                  <Label className="text-lg font-semibold mb-3 block">Type systeem</Label>
+
+              {/* Ja/Nee keuze */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <Card
+                  className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                    config.showPalletizing
+                      ? 'ring-2 ring-bates-orange bg-orange-50 border-bates-orange'
+                      : 'hover:border-bates-orange/30 bg-white'
+                  }`}
+                  onClick={() => updateConfig('showPalletizing', true)}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="font-bold text-lg text-gray-900 mb-1">Ja</div>
+                    <div className="text-sm text-gray-600">Palletiseren is gewenst</div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                    !config.showPalletizing
+                      ? 'ring-2 ring-bates-orange bg-orange-50 border-bates-orange'
+                      : 'hover:border-bates-orange/30 bg-white'
+                  }`}
+                  onClick={() => updateConfig('showPalletizing', false)}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="font-bold text-lg text-gray-900 mb-1">Nee</div>
+                    <div className="text-sm text-gray-600">Geen palletisering nodig</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {!config.showPalletizing ? (
+                <div className="text-center py-12">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Palletiseren uitgeschakeld</h3>
+                  <p className="text-gray-600">Kies "Ja" om het palletiseer-menu te openen.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div>
+                    <Label className="text-lg font-semibold mb-3 block">Type systeem</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        { value: 'conventioneel', label: 'Conventionele palletiser', desc: 'Standaard systeem' },
+                        { value: 'robot', label: 'Robotarm', desc: 'Flexibel robotsysteem' }
+                      ].map((option) => (
+                        <Card
+                          key={option.value}
+                          className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                            config.palletOptions?.systemType === option.value 
+                              ? 'ring-2 ring-bates-orange bg-orange-50 border-bates-orange' 
+                              : 'hover:border-bates-orange/30 bg-white'
+                          }`}
+                          onClick={() => updateConfig('palletOptions', {
+                            ...config.palletOptions,
+                            systemType: option.value
+                          })}
+                        >
+                          <CardContent className="p-6 text-center">
+                            <div className="font-bold text-lg text-gray-900 mb-1">{option.label}</div>
+                            <div className="text-sm text-gray-600">{option.desc}</div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-lg font-semibold mb-3 block">Palletformaat</Label>
+                    <Select 
+                      value={config.palletOptions?.palletFormat} 
+                      onValueChange={(value) => updateConfig('palletOptions', {
+                        ...config.palletOptions,
+                        palletFormat: value
+                      })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecteer palletformaat" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="euro">Euro pallet (120x80cm)</SelectItem>
+                        <SelectItem value="blok">Blok pallet (120x100cm)</SelectItem>
+                        <SelectItem value="custom">Custom formaat</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { value: 'conventioneel', label: 'Conventionele palletiser', desc: 'Standaard systeem' },
-                      { value: 'robot', label: 'Robotarm', desc: 'Flexibel robotsysteem' }
+                      { key: 'tussenvel', label: 'Tussenvel', desc: 'Scheidingslagen' },
+                      { key: 'hoesentrekker', label: 'Hoesentrekker', desc: 'Plastic omhulling' },
+                      { key: 'breeklijm', label: 'Breeklijm', desc: 'Lijmbevestiging' },
+                      { key: 'labeling', label: 'Labeling', desc: 'Pallet labels' }
                     ].map((option) => (
                       <Card
-                        key={option.value}
-                        className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-                          config.palletOptions?.systemType === option.value 
+                        key={option.key}
+                        className={`cursor-pointer transition-all duration-200 ${
+                          config.palletOptions?.[option.key as keyof typeof config.palletOptions] 
                             ? 'ring-2 ring-bates-orange bg-orange-50 border-bates-orange' 
-                            : 'hover:border-bates-orange/30 bg-white'
+                            : 'hover:border-bates-orange/30 bg-white hover:shadow-md'
                         }`}
-                        onClick={() => updateConfig('palletOptions', {
-                          ...config.palletOptions,
-                          systemType: option.value
-                        })}
+                        onClick={() => {
+                          const current = config.palletOptions?.[option.key as keyof typeof config.palletOptions] || false;
+                          updateConfig('palletOptions', {
+                            ...config.palletOptions,
+                            [option.key]: !current
+                          });
+                        }}
                       >
-                        <CardContent className="p-6 text-center">
-                          <div className="font-bold text-lg text-gray-900 mb-1">{option.label}</div>
-                          <div className="text-sm text-gray-600">{option.desc}</div>
+                        <CardContent className="p-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              checked={Boolean(config.palletOptions?.[option.key as keyof typeof config.palletOptions])}
+                            />
+                            <div>
+                              <div className="font-semibold">{option.label}</div>
+                              <div className="text-sm text-gray-600">{option.desc}</div>
+                            </div>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
                   </div>
                 </div>
-                
-                <div>
-                  <Label className="text-lg font-semibold mb-3 block">Palletformaat</Label>
-                  <Select 
-                    value={config.palletOptions?.palletFormat} 
-                    onValueChange={(value) => updateConfig('palletOptions', {
-                      ...config.palletOptions,
-                      palletFormat: value
-                    })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecteer palletformaat" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="euro">Euro pallet (120x80cm)</SelectItem>
-                      <SelectItem value="blok">Blok pallet (120x100cm)</SelectItem>
-                      <SelectItem value="custom">Custom formaat</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    { key: 'tussenvel', label: 'Tussenvel', desc: 'Scheidingslagen' },
-                    { key: 'hoesentrekker', label: 'Hoesentrekker', desc: 'Plastic omhulling' },
-                    { key: 'breeklijm', label: 'Breeklijm', desc: 'Lijmbevestiging' },
-                    { key: 'labeling', label: 'Labeling', desc: 'Pallet labels' }
-                  ].map((option) => (
-                    <Card
-                      key={option.key}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        config.palletOptions?.[option.key as keyof typeof config.palletOptions] 
-                          ? 'ring-2 ring-bates-orange bg-orange-50 border-bates-orange' 
-                          : 'hover:border-bates-orange/30 bg-white hover:shadow-md'
-                      }`}
-                      onClick={() => {
-                        const current = config.palletOptions?.[option.key as keyof typeof config.palletOptions] || false;
-                        updateConfig('palletOptions', {
-                          ...config.palletOptions,
-                          [option.key]: !current
-                        });
-                      }}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            checked={Boolean(config.palletOptions?.[option.key as keyof typeof config.palletOptions])}
-                          />
-                          <div>
-                            <div className="font-semibold">{option.label}</div>
-                            <div className="text-sm text-gray-600">{option.desc}</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
           </div>
         );
@@ -749,8 +775,9 @@ const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
         return config.packagingType !== 'zak';
       case 6: // Zakken sluiten - skip if not 'zak'
         return config.packagingType !== 'zak';
-      case 8: // Palletiseren - skip based on conditions
-        return !config.showPalletizing || ['pot', 'emmer'].includes(config.packagingType);
+      // Palletiseren wordt niet automatisch overgeslagen; gebruiker kiest Ja/Nee
+      case 8:
+        return false;
       default:
         return false;
     }
