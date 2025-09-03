@@ -1,0 +1,61 @@
+Productspecificaties:
+Productgroep
+  Food
+  Non-food
+  Bouw
+  Agro
+  Overig
+    Fill in text box
+Productvorm
+  Fijn granulaat
+  Grof granulaat
+  Poeder
+  Anders
+    Fill in text box ("specificeer uw product")*
+Output
+  1-1000+ zakken per uur
+Gewicht
+  Fill in text box met waardes van min-max 0.1kg-1000kg
+Type verpakking?
+  Zak
+  Emmer
+  Pot
+  Octabin
+  Big Bag
+  Overig
+    Fill in text box
+Verpakking aanbrengen
+  Handmatig
+  Semi automatisch (voorbeelden geven)
+  Volautomatisch (voorbeelden geven)
+Verpakking sluiten
+  Niet van toepassing
+  Zelfsluitend ventiel
+  Uitwendig sealbaar
+    Hitte
+    Ultrasoon
+Verpakking afvoeren
+  Handmatig
+  Automatisch
+Palletiseren
+  Niet van toepassing
+  Handmatig
+  Automatisch
+    Palletiserings configuratie
+      Palletformaat
+        Opties: - Tussen-/topsheet - Hoesentrekker - Breeklijm - Labeling/ bedrukking
+Besturingsmodule
+  Op machine
+  Andere locatie
+Certficering
+  Niet van toepassing
+  ATEX
+  Placeholder
+Configuratiescherm
+  Dien vrijblijvende offerte in
+    Contactgegevens invullen
+      Configuratie naar PDF, email naar BATES met config en contactinfo Klant krijg pdf en conformatie email
+  Dowload offerte
+    Configuratie naar PDF, ergens melding zetten dat iemand offerte gedownload heeft? contactgegevens al laten invullen?
+  Contact voor advies/ toch iets meer custom?
+    Huidige configuratie naar PDF, Klantgegevens, contact met klant opnemen, laat de klant specifieke vraag opstellen
